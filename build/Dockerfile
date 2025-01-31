@@ -4,13 +4,9 @@ ENV GOSUMDB=off GOPRIVATE=github.com/Netcracker
 
 WORKDIR /workspace
 
-RUN apk add --no-cache git
-
 # Copy the Go Modules manifests
 COPY go.mod go.mod
 COPY go.sum go.sum
-
-RUN --mount=type=secret,id=GH_ACCESS_TOKEN git config --global url."https://$(cat /run/secrets/GH_ACCESS_TOKEN)@github.com/".insteadOf "https://github.com/"
 
 RUN go mod download
 
