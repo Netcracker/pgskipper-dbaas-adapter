@@ -1,7 +1,5 @@
 FROM --platform=$BUILDPLATFORM golang:1.22.5-alpine3.20 AS builder
 
-ENV GOSUMDB=off GOPRIVATE=github.com/Netcracker
-
 WORKDIR /workspace
 
 # Copy the Go Modules manifests
