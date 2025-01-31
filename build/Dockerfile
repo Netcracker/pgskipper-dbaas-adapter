@@ -8,8 +8,6 @@ WORKDIR /workspace
 COPY go.mod go.mod
 COPY go.sum go.sum
 
-RUN go mod download
-
 # Copy the go source
 COPY adapter/ adapter/
 
