@@ -281,7 +281,9 @@ func (ba BackupAdapter) EvictBackup(ctx context.Context, backupId string) string
 	if err != nil {
 		panic(err)
 	}
-
+	if response.Status == http.StatusNotFound {
+		return fmt.Sprintf("Not found backup for backupId: %s", backupId)
+	}
 	var deleteResponse PostgresBackupDeleteResponse
 	err = json.Unmarshal(response.Body, &deleteResponse)
 	if err != nil {
