@@ -275,14 +275,14 @@ func (ba BackupAdapter) getRestoreStatus(ctx context.Context, trackId string) (*
 	return &restoreStatus, true
 }
 
-func (ba BackupAdapter) EvictBackup(ctx context.Context, backupId string) string {
+func (ba BackupAdapter) EvictBackup(ctx context.Context, backupId string) (string, bool) {
 	logger := util.ContextLogger(ctx)
 	response, err := ba.sendRequest(ctx, Post, "/delete/"+backupId, nil)
 	if err != nil {
 		panic(err)
 	}
 	if response.Status == http.StatusNotFound {
-		return fmt.Sprintf("Not found backup for backupId: %s", backupId)
+		return "", false
 	}
 	var deleteResponse PostgresBackupDeleteResponse
 	err = json.Unmarshal(response.Body, &deleteResponse)
@@ -300,7 +300,7 @@ func (ba BackupAdapter) EvictBackup(ctx context.Context, backupId string) string
 		}
 	}
 	//todo
-	return status
+	return status, true
 
 }
 

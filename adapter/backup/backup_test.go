@@ -319,10 +319,11 @@ func TestEvictBackupStatus(t *testing.T) {
 
 	backupAdapater := NewServiceAdapter(nil, aggAddress, "", false, "", "", "")
 
-	backupStatus := backupAdapater.EvictBackup(context.Background(), "20240105T0836")
+	backupStatus, isFound := backupAdapater.EvictBackup(context.Background(), "20240105T0836")
 
 	fmt.Printf("Backup EVICT NEwStatus: %v\n", backupStatus)
 	assert.Equal(t, backupStatus, "SUCCESS")
+	assert.Equal(t, true, isFound)
 
 }
 
@@ -332,10 +333,11 @@ func TestEvictBackupIdNotFound(t *testing.T) {
 
 	backupAdapater := NewServiceAdapter(nil, aggAddress, "", false, "", "", "")
 
-	backupStatus := backupAdapater.EvictBackup(context.Background(), "20240105T0833")
+	backupStatus, isFound := backupAdapater.EvictBackup(context.Background(), "20240105T0833")
 
 	fmt.Printf("Backup EVICT NEwStatus: %v\n", backupStatus)
-	assert.Equal(t, backupStatus, "Not found backup for backupId: 20240105T0833")
+	assert.Equal(t, backupStatus, "")
+	assert.Equal(t, false, isFound)
 
 }
 
