@@ -46,7 +46,7 @@ var generatorMutex = sync.Mutex{}
 func newPostgresAdapterBackupActionTrack(task *PostgresBackupStatus) dao.DatabaseAdapterBaseTrack {
 	var details *dao.DatabasesBackupAdapt = nil
 
-	if "Successful" == task.Status {
+	if task.Status == "Successful" {
 		details = &dao.DatabasesBackupAdapt{
 			LocalId: task.BackupId,
 		}
