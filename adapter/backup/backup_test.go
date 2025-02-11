@@ -321,7 +321,7 @@ func TestEvictBackupStatus(t *testing.T) {
 
 	backupStatus, isFound := backupAdapater.EvictBackup(context.Background(), "20240105T0836")
 
-	fmt.Printf("Backup EVICT NEwStatus: %v\n", backupStatus)
+	fmt.Printf("Backup EVICT NewStatus: %v\n", backupStatus)
 	assert.Equal(t, backupStatus, "SUCCESS")
 	assert.Equal(t, true, isFound)
 
@@ -335,7 +335,7 @@ func TestEvictBackupIdNotFound(t *testing.T) {
 
 	backupStatus, isFound := backupAdapater.EvictBackup(context.Background(), "20240105T0833")
 
-	fmt.Printf("Backup EVICT NEwStatus: %v\n", backupStatus)
+	fmt.Printf("Backup EVICT NewStatus: %v\n", backupStatus)
 	assert.Equal(t, backupStatus, "")
 	assert.Equal(t, false, isFound)
 
