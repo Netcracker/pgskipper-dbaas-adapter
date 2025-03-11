@@ -187,7 +187,9 @@ func main() {
 
 	if checkInitMode() {
 		initial.UpdateExtensions(dbAdminImpl)
-		initial.PerformMigration(dbAdminImpl)
+		if initial.IsRoleUpdateRequired() {
+			initial.PerformMigration(dbAdminImpl)
+		}
 		return
 	}
 
