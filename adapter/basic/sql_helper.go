@@ -36,8 +36,8 @@ var (
 	crParamsKeys = []string{"OWNER", "TEMPLATE", "ENCODING", "LOCALE", "LC_COLLATE",
 		"LC_CTYPE", "TABLESPACE", "ALLOW_CONNECTIONS", "CONNECTION LIMIT", "IS_TEMPLATE"}
 	getDatabases                      = "SELECT DATNAME FROM pg_database;"
-	deleteMetaData                    = "DELETE FROM _DBAAS_METADATA"
-	insertIntoMetaTable               = "INSERT INTO _DBAAS_METADATA VALUES ($1, $2)"
+	deleteMetaData                    = "DELETE FROM public._DBAAS_METADATA"
+	insertIntoMetaTable               = "INSERT INTO public._DBAAS_METADATA VALUES ($1, $2)"
 	selectPostgresAvailableExtensions = "SELECT NAME FROM PG_AVAILABLE_EXTENSIONS"
 	createMetaTable                   = "CREATE TABLE IF NOT EXISTS public._DBAAS_METADATA (key varchar(256) PRIMARY KEY, value json)"
 	getUser                           = "SELECT 1 FROM pg_roles WHERE rolname = $1;"
@@ -48,8 +48,8 @@ var (
 	getDependenceDbForRole            = "SELECT distinct datname FROM pg_database WHERE has_database_privilege($1, datname, 'CREATE') or oid in (select dbid from pg_shdepend join pg_roles on pg_shdepend.refobjid = pg_roles.oid where rolname =$2);"
 	dropUserConnectionsToDb           = "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE usename = $1;"
 	getOwnerForMetaData               = "select tableowner from pg_tables where tablename = '_dbaas_metadata';"
-	getMetadata                       = "SELECT value FROM _DBAAS_METADATA where key = $1;"
-	getAllMetadata                    = "SELECT * FROM _DBAAS_METADATA;"
+	getMetadata                       = "SELECT value FROM public._DBAAS_METADATA where key = $1;"
+	getAllMetadata                    = "SELECT * FROM public._DBAAS_METADATA;"
 	getConnectionLimitFromTemplate1   = "select datconnlimit::text from pg_database where datname = 'template1';"
 	existsRollbackTransactions        = "SELECT EXISTS (SELECT 1 FROM pg_prepared_xacts WHERE database = $1);"
 	selectPreparedTransactions        = "SELECT gid FROM pg_prepared_xacts WHERE database = $1;"
@@ -105,7 +105,7 @@ func dropUser(userName string) string {
 }
 
 func alterOwnerMetaTable(userName string) string {
-	return fmt.Sprintf("ALTER TABLE _DBAAS_METADATA OWNER TO \"%s\"", userName)
+	return fmt.Sprintf("ALTER TABLE public._DBAAS_METADATA OWNER TO \"%s\"", userName)
 }
 
 func alterOwnerForTable(schema, tableName, userName string) string {
