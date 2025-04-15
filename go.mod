@@ -1,7 +1,6 @@
 module github.com/Netcracker/pgskipper-dbaas-adapter/postgresql-dbaas-adapter
 
-go 1.21
-toolchain go1.24.1
+go 1.23.0
 
 require (
 	github.com/Netcracker/qubership-dbaas-adapter-core v0.9.5
