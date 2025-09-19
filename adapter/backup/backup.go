@@ -30,6 +30,7 @@ import (
 	"github.com/Netcracker/pgskipper-dbaas-adapter/postgresql-dbaas-adapter/adapter/cluster"
 	"github.com/Netcracker/pgskipper-dbaas-adapter/postgresql-dbaas-adapter/adapter/util"
 	"github.com/Netcracker/qubership-dbaas-adapter-core/pkg/dao"
+	"github.com/Netcracker/qubership-dbaas-adapter-core/pkg/service"
 	coreUtils "github.com/Netcracker/qubership-dbaas-adapter-core/pkg/utils"
 	uuid "github.com/satori/go.uuid"
 	"github.com/valyala/fasthttp"
@@ -103,16 +104,25 @@ func NewServiceAdapter(clusterAdapter cluster.ClusterAdapter, backupAddress stri
 		httpClient.TLSConfig = setTLSConfig()
 	}
 
+	// Client for default backup service
+	httpClientForDefault := &http.Client{}
+	if pgSSl == "on" && certFileExists() {
+		httpClientForDefault.Transport = &http.Transport{
+			TLSClientConfig: setTLSConfig(),
+		}
+	}
+
 	client := &BackupAdapter{
-		ClusterAdapter: clusterAdapter,
-		DaemonAddress:  backupAddress,
-		Keep:           keep,
-		Auth:           auth,
-		User:           user,
-		Password:       password,
-		PgSSl:          pgSSl,
-		Client:         httpClient,
-		log:            util.GetLogger(),
+		ClusterAdapter:       clusterAdapter,
+		DaemonAddress:        backupAddress,
+		Keep:                 keep,
+		Auth:                 auth,
+		User:                 user,
+		Password:             password,
+		PgSSl:                pgSSl,
+		Client:               httpClient,
+		log:                  util.GetLogger(),
+		DefaultBackupService: service.DefaultBackupAdministrationService(util.GetLogger(), backupAddress, user, password, false, httpClientForDefault, util.GetPgDBLength(), []string{}),
 	}
 	return client
 }
@@ -410,4 +420,28 @@ func mapStatus(daemonStatus string) dao.DatabaseAdapterBackupAdapterTrackStatus 
 	default:
 		return "FAIL"
 	}
+}
+
+func (ba *BackupAdapter) CollectBackupNew(ctx context.Context, storageName string, blobPath string, databaseNames []string) (*dao.BackupResponse, bool) {
+	return ba.DefaultBackupService.CollectBackupNew(ctx, storageName, blobPath, databaseNames)
+}
+
+func (ba *BackupAdapter) RestoreBackupNew(ctx context.Context, backupId string, restoreRequest dao.CreateRestoreRequest, dryRun bool) (*dao.RestoreResponse, bool) {
+	return ba.DefaultBackupService.RestoreBackupNew(ctx, backupId, restoreRequest, dryRun)
+}
+
+func (ba *BackupAdapter) EvictBackupNew(ctx context.Context, backupId string) bool {
+	return ba.DefaultBackupService.EvictBackupNew(ctx, backupId)
+}
+
+func (ba *BackupAdapter) EvictRestoreNew(ctx context.Context, restoreId string) bool {
+	return ba.DefaultBackupService.EvictRestoreNew(ctx, restoreId)
+}
+
+func (ba *BackupAdapter) TrackBackupNew(ctx context.Context, backupId string) (*dao.BackupResponse, bool) {
+	return ba.DefaultBackupService.TrackBackupNew(ctx, backupId)
+}
+
+func (ba *BackupAdapter) TrackRestoreNew(ctx context.Context, restoreId string) (*dao.RestoreResponse, bool) {
+	return ba.DefaultBackupService.TrackRestoreNew(ctx, restoreId)
 }
