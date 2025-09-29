@@ -31,7 +31,7 @@ import (
 	"github.com/Netcracker/pgskipper-dbaas-adapter/postgresql-dbaas-adapter/adapter/util"
 	"github.com/Netcracker/qubership-dbaas-adapter-core/pkg/dao"
 	coreUtils "github.com/Netcracker/qubership-dbaas-adapter-core/pkg/utils"
-	uuid "github.com/satori/go.uuid"
+	uuid "github.com/google/uuid"
 	"github.com/valyala/fasthttp"
 	"go.uber.org/zap"
 )
@@ -378,8 +378,7 @@ func getDbNames(dbInfo []dao.DbInfo) []string {
 func generateDbNameWithUUID(ctx context.Context, dbName string) string {
 	logger := util.ContextLogger(ctx)
 
-	uuidName := uuid.NewV4()
-	newDbName := uuidName.String()
+	newDbName := uuid.New().String()
 	newDbName = strings.ReplaceAll(newDbName, "-", "")
 
 	maxLen := util.GetPgDBLength()
@@ -387,7 +386,7 @@ func generateDbNameWithUUID(ctx context.Context, dbName string) string {
 	if len(dbName) > maxLen-len(newDbName)-1 {
 		prefixFromDb = dbName[:maxLen-1-len(dbName)]
 	}
-	newDbName = fmt.Sprintf("%s_%s", prefixFromDb, uuidName.String())
+	newDbName = fmt.Sprintf("%s_%s", prefixFromDb, newDbName)
 
 	logger.Info(fmt.Sprintf("New name %s was generated for db with name %s", newDbName, dbName))
 	return strings.ToLower(newDbName)
