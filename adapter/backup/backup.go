@@ -378,7 +378,8 @@ func getDbNames(dbInfo []dao.DbInfo) []string {
 func generateDbNameWithUUID(ctx context.Context, dbName string) string {
 	logger := util.ContextLogger(ctx)
 
-	newDbName := uuid.New().String()
+	uuidName := uuid.New()
+	newDbName := uuidName.String()
 	newDbName = strings.ReplaceAll(newDbName, "-", "")
 
 	maxLen := util.GetPgDBLength()
@@ -386,7 +387,7 @@ func generateDbNameWithUUID(ctx context.Context, dbName string) string {
 	if len(dbName) > maxLen-len(newDbName)-1 {
 		prefixFromDb = dbName[:maxLen-1-len(dbName)]
 	}
-	newDbName = fmt.Sprintf("%s_%s", prefixFromDb, newDbName)
+	newDbName = fmt.Sprintf("%s_%s", prefixFromDb, uuidName.String())
 
 	logger.Info(fmt.Sprintf("New name %s was generated for db with name %s", newDbName, dbName))
 	return strings.ToLower(newDbName)
