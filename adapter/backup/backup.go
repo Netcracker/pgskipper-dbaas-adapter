@@ -422,26 +422,26 @@ func mapStatus(daemonStatus string) dao.DatabaseAdapterBackupAdapterTrackStatus 
 	}
 }
 
-func (ba *BackupAdapter) CollectBackupNew(ctx context.Context, storageName string, blobPath string, databaseNames []string) (*dao.BackupResponse, bool) {
-	return ba.DefaultBackupService.CollectBackupNew(ctx, storageName, blobPath, databaseNames)
+func (ba *BackupAdapter) CollectBackupV2(ctx context.Context, storageName string, blobPath string, databaseNames []string) (*dao.BackupResponse, bool) {
+	return ba.DefaultBackupService.CollectBackupV2(ctx, storageName, blobPath, databaseNames)
 }
 
-func (ba *BackupAdapter) RestoreBackupNew(ctx context.Context, backupId string, restoreRequest dao.CreateRestoreRequest, dryRun bool) (*dao.RestoreResponse, bool) {
-	return ba.DefaultBackupService.RestoreBackupNew(ctx, backupId, restoreRequest, dryRun)
+func (ba *BackupAdapter) RestoreBackupV2(ctx context.Context, backupId string, restoreRequest dao.CreateRestoreRequest, dryRun bool) (*dao.RestoreResponse, bool) {
+	return ba.DefaultBackupService.RestoreBackupV2(ctx, backupId, restoreRequest, dryRun)
 }
 
-func (ba *BackupAdapter) EvictBackupNew(ctx context.Context, backupId string) bool {
-	return ba.DefaultBackupService.EvictBackupNew(ctx, backupId)
+func (ba *BackupAdapter) EvictBackupV2(ctx context.Context, backupId string, blobPath string) bool {
+	return ba.DefaultBackupService.EvictBackupV2(ctx, backupId, blobPath)
 }
 
-func (ba *BackupAdapter) EvictRestoreNew(ctx context.Context, restoreId string) bool {
-	return ba.DefaultBackupService.EvictRestoreNew(ctx, restoreId)
+func (ba *BackupAdapter) EvictRestoreV2(ctx context.Context, restoreId string, blobPath string) bool {
+	return ba.DefaultBackupService.EvictRestoreV2(ctx, restoreId, blobPath)
 }
 
-func (ba *BackupAdapter) TrackBackupNew(ctx context.Context, backupId string) (*dao.BackupResponse, bool) {
-	return ba.DefaultBackupService.TrackBackupNew(ctx, backupId)
+func (ba *BackupAdapter) TrackBackupV2(ctx context.Context, backupId string, blobPath string) (*dao.BackupResponse, bool) {
+	return ba.DefaultBackupService.TrackBackupV2(ctx, backupId, blobPath)
 }
 
-func (ba *BackupAdapter) TrackRestoreNew(ctx context.Context, restoreId string) (*dao.RestoreResponse, bool) {
-	return ba.DefaultBackupService.TrackRestoreNew(ctx, restoreId)
+func (ba *BackupAdapter) TrackRestoreV2(ctx context.Context, restoreId string, blobPath string) (*dao.RestoreResponse, bool) {
+	return ba.DefaultBackupService.TrackRestoreV2(ctx, restoreId, blobPath)
 }
