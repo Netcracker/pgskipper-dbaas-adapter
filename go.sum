@@ -40,6 +40,8 @@ github.com/Netcracker/qubership-dbaas-adapter-core v0.10.1 h1:KMvhVKTbqRu1k1CdVN
 github.com/Netcracker/qubership-dbaas-adapter-core v0.10.1/go.mod h1:WwqayO1puRMdzoB6EbIpHWqhkYi4JT7v4pCVM6h15D8=
 github.com/Netcracker/qubership-dbaas-adapter-core v0.10.2-0.20251001184126-2b5a73fb60fb h1:+J47GTZzRYk7wdhVigY8EKZxDcIW12/zvjCxsYV1fz4=
 github.com/Netcracker/qubership-dbaas-adapter-core v0.10.2-0.20251001184126-2b5a73fb60fb/go.mod h1:WwqayO1puRMdzoB6EbIpHWqhkYi4JT7v4pCVM6h15D8=
+github.com/Netcracker/qubership-dbaas-adapter-core v0.10.2-0.20251001204236-6855a161be55 h1:G76ciWySv/VfvY8znaao6SWt2AxYgRqufBxpipKpoS4=
+github.com/Netcracker/qubership-dbaas-adapter-core v0.10.2-0.20251001204236-6855a161be55/go.mod h1:WwqayO1puRMdzoB6EbIpHWqhkYi4JT7v4pCVM6h15D8=
 github.com/PuerkitoBio/purell v1.1.1 h1:WEQqlqaGbrPkxLJWfBwQmfEAE1Z7ONdDLqrN38tNFfI=
 github.com/PuerkitoBio/purell v1.1.1/go.mod h1:c11w/QuzBsJSee3cPx9rAFu61PvFxuPbtSwDGJws/X0=
 github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 h1:d+Bc7a5rLufV/sSk/8dngufqelfh6jnri85riMAaF/M=
