@@ -208,6 +208,7 @@ func main() {
 		&coreUtils.VaultClient{},
 		*readOnlyHost,
 	)
+	
 
 	if strings.Contains(*dbaasAggregatorRegistrationAddress, "https") {
 		logger.Info("tls is enabled, will check if https presented in adapter url")
