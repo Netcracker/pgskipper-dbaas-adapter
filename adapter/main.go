@@ -58,13 +58,8 @@ var (
 	pgBackupDaemonAddress = flag.String("daemon_address", util.GetEnv("POSTGRES_BACKUP_DAEMON_ADDRESS", "http://postgres-backup-daemon:9000"), "Host of PostgreSQL cluster, env: POSTGRES_BACKUP_DAEMON_ADDRESS")
 	pgBackupKeep          = flag.String("backup_keep", util.GetEnv("POSTGRES_BACKUP_KEEP", "1 week"), "Host of PostgreSQL cluster, env: POSTGRES_BACKUP_KEEP")
 
-	readOnlyHost   = flag.String("readonly_host", util.GetEnv("READONLY_HOST", "127.0.0.1"), " ReadOnly Host of PostgreSQL cluster, env: READONLY_HOST")
-	vaultEnabled   = flag.Bool("vault_enabled", util.GetEnvBool("VAULT_ENABLED", false), "Enable vault, env: VAULT_ENABLED")
-	vaultAddress   = flag.String("vault_address", util.GetEnv("VAULT_ADDR", ""), "Vault address, env: VAULT_ADDR")
-	vaultRole      = flag.String("vault_role", util.GetEnv("VAULT_ROLE", "postgres-sa"), "Vault role, env: VAULT_ROLE")
-	vaultRotPeriod = flag.String("vault_rotation_period", util.GetEnv("VAULT_ROTATION_PERIOD", "3600"), "Vault rotation period, env: VAULT_ROTATION_PERIOD")
-	vaultDBName    = flag.String("vault_db_engine_name", util.GetEnv("VAULT_DB_ENGINE_NAME", "postgresql"), "Vault db engine name, env: VAULT_DB_ENGINE_NAME")
-	namespace      = flag.String("namespace", util.GetEnv("CLOUD_NAMESPACE", ""), "Namespace name, env: CLOUD_NAMESPACE")
+	readOnlyHost = flag.String("readonly_host", util.GetEnv("READONLY_HOST", "127.0.0.1"), " ReadOnly Host of PostgreSQL cluster, env: READONLY_HOST")
+	namespace    = flag.String("namespace", util.GetEnv("CLOUD_NAMESPACE", ""), "Namespace name, env: CLOUD_NAMESPACE")
 
 	isMultiUsersEnabled = flag.Bool("multi_users_enabled", util.GetEnvBool("MULTI_USERS_ENABLED", false), "Is multi Users functionality enabled, env: MULTI_USERS_ENABLED")
 
@@ -141,7 +136,6 @@ var (
 		Users:             true,
 		Settings:          true,
 		DescribeDatabases: false,
-		AdditionalKeys:    map[string]bool{"vault": true},
 	}
 )
 
@@ -195,23 +189,6 @@ func main() {
 		return
 	}
 
-	var vaultClient *coreUtils.VaultClient
-
-	if *vaultEnabled {
-		logger.Info("Vault Integration is Enabled")
-		vaultConfig := coreUtils.VaultConfig{
-			IsVaultEnabled:  *vaultEnabled,
-			Address:         *vaultAddress,
-			VaultRole:       *vaultRole,
-			VaultRotPeriod:  *vaultRotPeriod,
-			VaultDBName:     *vaultDBName,
-			VaultAuthMethod: coreUtils.NCPrefix + util.GetEnv("CLOUD_PUBLIC_HOST", "") + "_" + *namespace,
-		}
-		vaultClient = coreUtils.NewVaultClient(vaultConfig)
-	} else {
-		vaultClient = &coreUtils.VaultClient{}
-	}
-
 	var backupAdminServiceImpl service.BackupAdministrationService
 	if *pgSsl == "on" {
 		logger.Debug("SSL is enabled")
@@ -227,10 +204,11 @@ func main() {
 		*servePort,
 		dbAdminImpl,
 		logger,
-		*vaultEnabled,
-		vaultClient,
+		false,
+		&coreUtils.VaultClient{},
 		*readOnlyHost,
 	)
+	
 
 	if strings.Contains(*dbaasAggregatorRegistrationAddress, "https") {
 		logger.Info("tls is enabled, will check if https presented in adapter url")
